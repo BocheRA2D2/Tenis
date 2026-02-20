@@ -647,3 +647,58 @@ select[multiple].form-control {
 [style*="border-top: 1px solid #eee"] {
     border-color: #f1f5f9 !important;
 }
+
+/* Expanded List View in Modals */
+.list-expand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.expand-btn {
+    background: var(--bg-app);
+    border: 1px solid var(--border-color);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary);
+    transition: 0.2s;
+}
+
+.expand-btn:hover {
+    background: var(--bg-surface);
+    transform: scale(1.1);
+}
+
+.expanded-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-surface);
+    z-index: 2100;
+    padding: 24px 20px 80px;
+    overflow-y: auto;
+    border-radius: 28px 28px 0 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded-container h3 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.expanded-back-btn {
+    margin-bottom: 20px;
+    align-self: flex-start;
+}

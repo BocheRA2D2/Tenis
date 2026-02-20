@@ -601,3 +601,58 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* Expanded List View in Modals */
+.list-expand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.expand-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border-glass);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--accent);
+    transition: 0.2s;
+}
+
+.expand-btn:hover {
+    background: var(--bg-glass-hover);
+    transform: scale(1.1);
+}
+
+.expanded-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-sidebar);
+    z-index: 200;
+    padding: 30px;
+    overflow-y: auto;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded-container h3 {
+    margin-bottom: 24px;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.expanded-back-btn {
+    margin-bottom: 24px;
+    align-self: flex-start;
+}
