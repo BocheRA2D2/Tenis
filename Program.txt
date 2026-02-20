@@ -1,0 +1,42 @@
+Manager tenisa stołowego
+Globalne założenia:
+1. kliknięcie gdzieś poza okno zapisuje i wychodzi z tego okna
+2. domyślknie wybrany jest aktualny miesiac
+3. cena treningu/ zajeć to 35zł, cena wynajmu stolu na 1 godzinę to 20 zł
+4. trening trwa zawsze 1,5h i trwa od 18 do 19:30
+5. Wszystkie dane w programie uzupełnia tylko jedna osoba
+6. jeżeli jesteśmy na obecnym miesiacu a w poprzednim miesiącu jakis gracz lub trening ma zaleglosc nieolaconą to przy strzeałce cofajacej do poprzedniego miesiaca będzie sie paliłą czerwona kropka, po cofnieciu w miesiac gdzie sa zaleglosci czerwone kropki będą wszszędzie tam gdzie gracz (zakladka zawodncy) lub trening ( zakladka kalendarz) nie został rozliczony
+3 Główne zakładki:
+	1. Kalendarz:
+		- Wybór miesiąca
+		- Traningi są zawsze w poniedziałki i środy
+		- Widok listy 
+		- belka wyglada tak ze jest napisany na niej dzien tygodnia i data w formacie dd.mm.rrrr oraz godzina rozpoczecia treningu 18:00 po prawej ilosć zapisanych graczy
+		- od góry od poczatku miesiaca a na dole ostatni trening miesiaca
+		- Po klikniknięciu w wybrany dzien:
+			- można zmienić godzinę treningu
+			- można przenieść trening na inny dzień (wtedy na belce będize zastapiona stara data i dizen tygodnia na nowy z dopiskiem ze przelozono i z jakiego dnia)
+			- można odwołać trening (wtedy na belce będize informacja ze trening odwolany)
+			- można usunąć gracza z listy zawodników tego treningu
+			- można dodać zawodnika na trenikng z rowzijanej listy (rozwijana lista ma funkcje wyboru wielokrotnego do dodawania wielu graczy na raz)
+			- można dodać nowego zawodnika do bazy i treningu jednocześnie (dodawanie gracza to wpisanie jego imienia i nazwiska i opcjonalnie numeru teoefonu)
+			- jest tez lista zapisanych juz graczy i przy kazdym z nich informacja czy ten trening jest oplaciny czy nie, klikajac na ta informacje zmienia sie na oplacony lub na niepopłacony.
+			- jeśli zostalo kliknietę ze zaplacil z panelu zawodnikow i szczegolow gracza i konkretnego treniungu to tu tez bedzie informacja i przelaczy sie na zaplacone i odwrotnie)
+	2. Zawodnicy:
+		-wybór miesiaća ( domyślnie ustawiony jest obecny miesiąc
+		- lista zawodników
+		- na kazdej belce z zawodnikiem jest inormacja czy w wybranym miesiacu wyszstko oplacil czy ma zaległe, ( jesli nie było go na zajęciach w danycm miesiacu to nie ma zadnej informacji)
+		- po kliknięciu na gracza pokazują sie szcegóły:
+			- ilość zajęć w danym miesiacu i godzin wynajecia stołu i obok pozostala kwota do zaplaty.
+			- ( jesli jest dodany numer telefonu to można kliknąć ikonkę telefonu i aplikacja otworzy polączenie)
+			- przycisk edycji gracza
+			- przycisk usuniecia gracza
+			- jego historia w danym miesiacu, wypozyczenie stolu jest inaczej zaznaczone niz trening (obok kazdej z aktywnosci przycisk po kliknieciu którego zmienia sie status z zaplacono na do zalpaty i odwrotnie)
+			- jeśli zostalo kliknietę ze zaplacil z pozoimu kalendarza i konkretnego treniungu to tu tez bedzie informacja i przelaczy sie na zaplacone i odwrotnie)
+	3. Stoły
+		- Stół można wynająć we wszystkie dni poza godinami treningowymi w poniedzialki i srody oraz w dni na któe zostal przeniesiony trening
+		- nie mozna tez wynając w piątek 
+		- wybiera się mozliwy dizen tygodnia i mozliwą godine rozpoczecia i dodaje sie ile godzin i kto rezerwuje. 
+		- ta rezerwacja wpada na liste rezerwacji i można ja rozliczyć poprzez klikniecie na nia i w szczegółach będzie przycisk rozliczenia który komunikuje sie ze szczegolwmi gracza w panelu zawodnika i odwrotnie)
+		- rezerwacje można też usunąć i edytować w jej szczegółach
+			

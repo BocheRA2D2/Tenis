@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenis Manager PC</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase 9 SDK (compat) for straightforward implementation -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="tennisball" class="brand-icon"></ion-icon>
+                <span>Tenis Manager</span>
+            </div>
+
+            <nav class="side-nav">
+                <button class="nav-btn active" data-tab="tab-calendar">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span>Kalendarz</span>
+                </button>
+                <button class="nav-btn" data-tab="tab-players">
+                    <ion-icon name="people-outline"></ion-icon>
+                    <span>Zawodnicy</span>
+                </button>
+                <button class="nav-btn" data-tab="tab-tables">
+                    <ion-icon name="desktop-outline"></ion-icon>
+                    <span>Stoły</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>&copy; 2026 Dashboard</p>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-workspace">
+            <header class="top-header glass-panel">
+                <div class="month-selector">
+                    <button id="prev-month-btn" class="btn-icon">
+                        <ion-icon name="chevron-back-outline"></ion-icon>
+                        <span id="prev-month-alert" class="alert-pulse hidden"></span>
+                    </button>
+                    <h2 id="current-month-display" class="month-title">Styczeń 2026</h2>
+                    <button id="next-month-btn" class="btn-icon">
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                <!-- Tab: Kalendarz -->
+                <section id="tab-calendar" class="tab-content active">
+                    <div class="section-header">
+                        <h3>Rozkład treningów</h3>
+                        <p class="text-subtitle">Zarządzaj wydarzeniami w bieżącym miesiącu</p>
+                    </div>
+                    <div id="calendar-list" class="grid-list"></div>
+                </section>
+
+                <!-- Tab: Zawodnicy -->
+                <section id="tab-players" class="tab-content">
+                    <div class="section-header flex-between">
+                        <div>
+                            <h3>Baza zawodników</h3>
+                            <p class="text-subtitle">Zarządzaj graczami i ich płatnościami</p>
+                        </div>
+                        <button id="add-new-player-btn" class="btn btn-gradient">
+                            <ion-icon name="add-circle-outline"></ion-icon> Dodaj zawodnika
+                        </button>
+                    </div>
+                    <div id="players-list" class="grid-list"></div>
+                </section>
+
+                <!-- Tab: Stoły -->
+                <section id="tab-tables" class="tab-content">
+                    <div class="section-header flex-between">
+                        <div>
+                            <h3>Rezerwacje stołów</h3>
+                            <p class="text-subtitle">Grafik wynajmu w trwającym miesiącu</p>
+                        </div>
+                        <button id="add-table-reservation-btn" class="btn btn-gradient">
+                            <ion-icon name="calendar-number-outline"></ion-icon> Nowa rezerwacja
+                        </button>
+                    </div>
+                    <div id="tables-list" class="grid-list"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals Area -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div id="modal-container" class="modal-container glass-modal">
+            <!-- Modal content injected dynamically -->
+        </div>
+    </div>
+
+    <!-- Scripts from Shared Folder -->
+    <script src="../Shared/js/firebase-init.js"></script>
+    <script src="../Shared/js/globals.js"></script>
+    <script src="../Shared/js/db.js"></script>
+    <script src="../Shared/js/app.js"></script>
+    <script src="../Shared/js/calendar.js"></script>
+    <script src="../Shared/js/players.js"></script>
+    <script src="../Shared/js/tables.js"></script>
+</body>
+
+</html>

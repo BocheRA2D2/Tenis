@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tenis Manager App</title>
+    <!-- Google Fonts: Roboto & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Firebase 9 SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Top global header: Month selection -->
+    <header class="top-header">
+        <div class="header-content">
+            <button id="prev-month-btn" class="icon-btn">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+                <span id="prev-month-alert" class="alert-dot hidden"></span>
+            </button>
+            <h1 id="current-month-display" class="month-title">Styczeń 2026</h1>
+            <button id="next-month-btn" class="icon-btn">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content" id="main-content">
+        <!-- Tab: Kalendarz -->
+        <section id="tab-calendar" class="tab-content active">
+            <div class="tab-header">
+                <h2>Treningi</h2>
+                <p>Miesięczny harmonogram</p>
+            </div>
+            <div id="calendar-list" class="list-container"></div>
+        </section>
+
+        <!-- Tab: Zawodnicy -->
+        <section id="tab-players" class="tab-content">
+            <div class="tab-header flex-between">
+                <div>
+                    <h2>Gracze</h2>
+                    <p>Zarządzaj zespołem</p>
+                </div>
+                <button id="add-new-player-btn" class="fab-btn">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                </button>
+            </div>
+            <div id="players-list" class="list-container"></div>
+        </section>
+
+        <!-- Tab: Stoły -->
+        <section id="tab-tables" class="tab-content">
+            <div class="tab-header flex-between">
+                <div>
+                    <h2>Stoły</h2>
+                    <p>Rezerwacje sprzętu</p>
+                </div>
+                <button id="add-table-reservation-btn" class="fab-btn">
+                    <ion-icon name="add-outline"></ion-icon>
+                </button>
+            </div>
+            <div id="tables-list" class="list-container"></div>
+        </section>
+    </main>
+
+    <!-- Floating Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <button class="nav-btn active" data-tab="tab-calendar">
+                <div class="nav-icon-box"><ion-icon name="calendar-outline"></ion-icon></div>
+                <span>Kalendarz</span>
+            </button>
+            <button class="nav-btn" data-tab="tab-players">
+                <div class="nav-icon-box"><ion-icon name="people-outline"></ion-icon></div>
+                <span>Zespół</span>
+            </button>
+            <button class="nav-btn" data-tab="tab-tables">
+                <div class="nav-icon-box"><ion-icon name="tennisball-outline"></ion-icon></div>
+                <span>Stoły</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Bottom Sheet Modal (Mobile style) -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div id="modal-container" class="bottom-sheet">
+            <!-- Modal content will be injected here dynamically -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../Shared/js/firebase-init.js"></script>
+    <script src="../Shared/js/globals.js"></script>
+    <script src="../Shared/js/db.js"></script>
+    <script src="../Shared/js/app.js"></script>
+    <script src="../Shared/js/calendar.js"></script>
+    <script src="../Shared/js/players.js"></script>
+    <script src="../Shared/js/tables.js"></script>
+    <script>
+        // Override close functions to animate the bottom sheet sliding down before hidden class is applied
+        const ogHide = UI.hideModal;
+        UI.hideModal = () => {
+            const sheet = document.getElementById('modal-container');
+            sheet.style.transform = 'translateY(100%)';
+            setTimeout(() => {
+                ogHide();
+                sheet.style.transform = '';
+            }, 300);
+        };
+    </script>
+</body>
+
+</html>

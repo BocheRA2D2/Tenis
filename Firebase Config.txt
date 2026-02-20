@@ -1,0 +1,8 @@
+const firebaseConfig = {
+            apiKey: "AIzaSyBqyDXKXRSxaQPrgLf2RmD0Qo3_32z0hKE",
+            authDomain: "projekt-tenis.firebaseapp.com",
+            projectId: "projekt-tenis",
+            storageBucket: "projekt-tenis.firebasestorage.app",
+            messagingSenderId: "1074086717012",
+            appId: "1:1074086717012:web:69e06d49122e6a84dfafc1"
+        };

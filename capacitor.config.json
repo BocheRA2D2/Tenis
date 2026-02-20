@@ -1,0 +1,6 @@
+{
+  "appId": "com.tenisv2.app",
+  "appName": "Tenis",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
