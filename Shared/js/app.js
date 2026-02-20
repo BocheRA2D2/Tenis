@@ -42,6 +42,7 @@ function refreshCurrentTab() {
     if (activeTab === 'tab-calendar' && typeof Calendar !== 'undefined') Calendar.render();
     if (activeTab === 'tab-players' && typeof Players !== 'undefined') Players.render();
     if (activeTab === 'tab-tables' && typeof Tables !== 'undefined') Tables.render();
+    if (activeTab === 'tab-settings' && typeof Settings !== 'undefined') Settings.render();
 }
 
 async function checkUnpaidDebts() {

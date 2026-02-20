@@ -75,6 +75,46 @@
             </div>
             <div id="tables-list" class="list-container"></div>
         </section>
+
+        <!-- Tab: Ustawienia -->
+        <section id="tab-settings" class="tab-content">
+            <div class="tab-header">
+                <h2>Ustawienia</h2>
+                <p>Personalizacja aplikacji</p>
+            </div>
+
+            <div class="settings-group"
+                style="background: var(--bg-surface); border-radius:16px; padding:20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border:1px solid var(--border-color);">
+                <h3 style="font-size:1.1rem; margin-bottom:16px;">Wybór motywu</h3>
+
+                <div class="theme-picker" style="display:flex; flex-direction:column; gap:12px;">
+                    <div class="theme-option" onclick="Settings.setTheme('light')"
+                        style="display:flex; align-items:center; gap:12px; padding:12px; background:var(--bg-app); border-radius:12px; border:1px solid var(--border-color); cursor:pointer;">
+                        <div
+                            style="width:24px; height:24px; border-radius:50%; background:#fff; border:1px solid #ddd;">
+                        </div>
+                        <span style="font-weight:500;">Jasny</span>
+                    </div>
+                    <div class="theme-option" onclick="Settings.setTheme('dark')"
+                        style="display:flex; align-items:center; gap:12px; padding:12px; background:var(--bg-app); border-radius:12px; border:1px solid var(--border-color); cursor:pointer;">
+                        <div style="width:24px; height:24px; border-radius:50%; background:#1e293b;"></div>
+                        <span style="font-weight:500;">Ciemny</span>
+                    </div>
+                    <div class="theme-option" onclick="Settings.setTheme('pingpong-light')"
+                        style="display:flex; align-items:center; gap:12px; padding:12px; background:var(--bg-app); border-radius:12px; border:1px solid var(--border-color); cursor:pointer;">
+                        <div style="width:24px; height:24px; border-radius:50%; background:#4caf50;"></div>
+                        <span style="font-weight:500;">Ping-Pong Jasny</span>
+                    </div>
+                    <div class="theme-option" onclick="Settings.setTheme('pingpong-dark')"
+                        style="display:flex; align-items:center; gap:12px; padding:12px; background:var(--bg-app); border-radius:12px; border:1px solid var(--border-color); cursor:pointer;">
+                        <div
+                            style="width:24px; height:24px; border-radius:50%; background:#0a1f0a; border:1px solid #4ade80;">
+                        </div>
+                        <span style="font-weight:500;">Ping-Pong Ciemny</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Floating Bottom Navigation -->
@@ -91,6 +131,10 @@
             <button class="nav-btn" data-tab="tab-tables">
                 <div class="nav-icon-box"><ion-icon name="grid-outline"></ion-icon></div>
                 <span>Stoły</span>
+            </button>
+            <button class="nav-btn" data-tab="tab-settings">
+                <div class="nav-icon-box"><ion-icon name="settings-outline"></ion-icon></div>
+                <span>Ustawienia</span>
             </button>
         </div>
     </nav>
@@ -110,6 +154,7 @@
     <script src="../Shared/js/calendar.js"></script>
     <script src="../Shared/js/players.js"></script>
     <script src="../Shared/js/tables.js"></script>
+    <script src="../Shared/js/settings.js"></script>
     <script>
         // Override close functions to animate the bottom sheet sliding down before hidden class is applied
         const ogHide = UI.hideModal;

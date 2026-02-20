@@ -13,6 +13,55 @@
     --success-bg: rgba(16, 185, 129, 0.1);
     --radius-lg: 20px;
     --radius-md: 12px;
+    --border-color: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-dark {
+    --bg-app: #0f172a;
+    --bg-surface: #1e293b;
+    --primary: #38bdf8;
+    --primary-glow: rgba(56, 189, 248, 0.4);
+    --secondary: #a78bfa;
+    --dark: #f8fafc;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --danger: #f87171;
+    --success: #4ade80;
+    --danger-bg: rgba(248, 113, 113, 0.15);
+    --success-bg: rgba(74, 222, 128, 0.15);
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-pingpong-light {
+    --bg-app: #e8f5e9;
+    --bg-surface: #ffffff;
+    --primary: #2e7d32;
+    --primary-glow: rgba(46, 125, 50, 0.4);
+    --secondary: #0277bd;
+    --dark: #1b5e20;
+    --text-main: #2e3d2e;
+    --text-muted: #667c66;
+    --danger: #c62828;
+    --success: #2e7d32;
+    --danger-bg: rgba(198, 40, 40, 0.1);
+    --success-bg: rgba(46, 125, 50, 0.1);
+    --border-color: rgba(46, 125, 50, 0.1);
+}
+
+body.theme-pingpong-dark {
+    --bg-app: #0a1f0a;
+    --bg-surface: #142e14;
+    --primary: #4ade80;
+    --primary-glow: rgba(74, 222, 128, 0.4);
+    --secondary: #00bcd4;
+    --dark: #e8f5e9;
+    --text-main: #d1e7d1;
+    --text-muted: #88a088;
+    --danger: #ff5252;
+    --success: #4ade80;
+    --danger-bg: rgba(255, 82, 82, 0.2);
+    --success-bg: rgba(74, 222, 128, 0.2);
+    --border-color: rgba(74, 222, 128, 0.15);
 }
 
 * {
@@ -83,7 +132,7 @@ h3,
     background: var(--bg-surface);
     padding: 40px 20px 15px;
     /* space for iOS notch/status bar */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--border-color);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     z-index: 10;
     position: relative;
@@ -207,7 +256,7 @@ h3,
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     cursor: pointer;
     position: relative;
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-color);
 }
 
 .list-item:active {
@@ -440,8 +489,8 @@ h3,
 .form-control {
     width: 100%;
     padding: 14px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-app);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     font-size: 1rem;
     font-family: inherit;

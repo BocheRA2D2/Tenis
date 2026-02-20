@@ -185,12 +185,18 @@ const Calendar = {
                 </select>
                 <button class="btn btn-primary btn-block mb-3" onclick="Calendar.addPlayersFromDb('${training.id}')">Dodaj wybranych</button>
                 
-                <h4 style="margin-bottom:10px;">Dodaj nowego i zapisz:</h4>
-                <div class="form-group">
-                    <input type="text" id="new-name" placeholder="Imię" class="form-control mb-2"/>
-                    <input type="text" id="new-surname" placeholder="Nazwisko" class="form-control mb-2"/>
-                    <input type="tel" id="new-phone" placeholder="Telefon (opcj.)" class="form-control mb-2"/>
-                    <button class="btn btn-primary btn-block" onclick="Calendar.addNewPlayerAndAssign('${training.id}')">Dodaj do bazy i treningu</button>
+                <button class="btn btn-outline btn-block mb-3" onclick="document.getElementById('new-player-form').classList.toggle('hidden')">
+                    <ion-icon name="person-add-outline"></ion-icon> Dodaj nowego gracza
+                </button>
+
+                <div id="new-player-form" class="hidden">
+                    <h4 style="margin-bottom:10px;">Dodaj nowego i zapisz:</h4>
+                    <div class="form-group">
+                        <input type="text" id="new-name" placeholder="Imię" class="form-control mb-2"/>
+                        <input type="text" id="new-surname" placeholder="Nazwisko" class="form-control mb-2"/>
+                        <input type="tel" id="new-phone" placeholder="Telefon (opcj.)" class="form-control mb-2"/>
+                        <button class="btn btn-primary btn-block" onclick="Calendar.addNewPlayerAndAssign('${training.id}')">Dodaj do bazy i treningu</button>
+                    </div>
                 </div>
             </div>
         `;
