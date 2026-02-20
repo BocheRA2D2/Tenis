@@ -275,7 +275,7 @@ const Calendar = {
 
     addPlayersFromDb(trainingId) {
         // Find checkboxes in either the base modal or the expanded view
-        const checkboxes = document.querySelectorAll('#db-player-list-container input[type="checkbox"]:checked');
+        const checkboxes = document.querySelectorAll('#modal-container input[type="checkbox"]:checked');
         const selectedIds = Array.from(checkboxes).map(cb => cb.value);
         if (selectedIds.length === 0) return;
 

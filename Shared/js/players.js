@@ -340,10 +340,29 @@ const Players = {
             modal.appendChild(expandedDiv);
         }
 
+        let navHtml = '';
+        if (view.containerId === 'history-list-box') {
+            // Include month navigation in expanded header
+            const header = document.querySelector('.list-expand-header');
+            if (header) {
+                const nav = header.querySelector('div[style*="display:flex; gap:5px;"]');
+                if (nav) {
+                    // Extract just the navigation arrows, excluding the expand button itself
+                    const arrows = nav.querySelectorAll('button:not(.expand-btn)');
+                    navHtml = `<div style="display:flex; gap:5px; margin-left: auto;">
+                        ${Array.from(arrows).map(a => a.outerHTML).join('')}
+                    </div>`;
+                }
+            }
+        }
+
         expandedDiv.innerHTML = `
-            <button class="btn btn-outline expanded-back-btn" onclick="state.activeExpandedView = null; this.parentElement.remove()">
-                <ion-icon name="arrow-back-outline"></ion-icon> Powrót
-            </button>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+                <button class="btn btn-outline expanded-back-btn" style="margin-bottom:0;" onclick="state.activeExpandedView = null; this.parentElement.parentElement.remove()">
+                    <ion-icon name="arrow-back-outline"></ion-icon> Powrót
+                </button>
+                ${navHtml}
+            </div>
             <h3><ion-icon name="wallet-outline"></ion-icon> ${view.title}</h3>
             <div style="flex: 1; overflow-y: auto;">
                 ${listContent}
