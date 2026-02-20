@@ -179,8 +179,13 @@ const Players = {
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 10px;">Historia wpłat (obecny miesiąc)</h3>
-            <div style="max-height: 200px; overflow-y:auto; padding-right:5px;">
+            <div class="list-expand-header">
+                <h3 style="margin-bottom: 0;">Historia wpłat (obecny miesiąc)</h3>
+                <button class="expand-btn" onclick="Players.toggleExpandList('history-list-box', 'Historia wpłat')">
+                    <ion-icon name="expand-outline"></ion-icon>
+                </button>
+            </div>
+            <div id="history-list-box" style="max-height: 200px; overflow-y:auto; padding-right:5px;">
                 ${historyHtml}
             </div>
         `;
@@ -289,5 +294,23 @@ const Players = {
         // Background refresh list and red dots
         Players.render();
         checkUnpaidDebts();
+    },
+
+    toggleExpandList(containerId, title) {
+        const modal = document.getElementById('modal-container');
+        const listContent = document.getElementById(containerId).innerHTML;
+
+        const expandedDiv = document.createElement('div');
+        expandedDiv.className = 'expanded-container';
+        expandedDiv.innerHTML = `
+            <button class="btn btn-outline expanded-back-btn" onclick="this.parentElement.remove()">
+                <ion-icon name="arrow-back-outline"></ion-icon> Powrót
+            </button>
+            <h3><ion-icon name="wallet-outline"></ion-icon> ${title}</h3>
+            <div style="flex: 1; overflow-y: auto;">
+                ${listContent}
+            </div>
+        `;
+        modal.appendChild(expandedDiv);
     }
 };

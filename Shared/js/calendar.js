@@ -187,8 +187,13 @@ const Calendar = {
                 </button>
             </div>
 
-            <h3 style="margin-bottom: 8px;">Obecnie zapisani (${playersList.length})</h3>
-            <div style="margin-bottom: 24px; max-height: 180px; overflow-y:auto; border:1px solid var(--border-color); border-radius:12px; padding:4px;">
+            <div class="list-expand-header">
+                <h3 style="margin-bottom: 0;">Obecnie zapisani (${playersList.length})</h3>
+                <button class="expand-btn" onclick="Calendar.toggleExpandList('enrolled-list-box', 'Obecnie zapisani')">
+                    <ion-icon name="expand-outline"></ion-icon>
+                </button>
+            </div>
+            <div id="enrolled-list-box" style="margin-bottom: 24px; max-height: 180px; overflow-y:auto; border:1px solid var(--border-color); border-radius:12px; padding:4px;">
                 ${playersHtml}
             </div>
 
@@ -284,5 +289,23 @@ const Calendar = {
         currentPlayers.push({ id: playerRef.id, paid: false });
 
         this.saveTrainingUpdate(trainingId, { players: currentPlayers });
+    },
+
+    toggleExpandList(containerId, title) {
+        const modal = document.getElementById('modal-container');
+        const listContent = document.getElementById(containerId).innerHTML;
+
+        const expandedDiv = document.createElement('div');
+        expandedDiv.className = 'expanded-container';
+        expandedDiv.innerHTML = `
+            <button class="btn btn-outline expanded-back-btn" onclick="this.parentElement.remove()">
+                <ion-icon name="arrow-back-outline"></ion-icon> Powrót
+            </button>
+            <h3><ion-icon name="list-outline"></ion-icon> ${title}</h3>
+            <div style="flex: 1; overflow-y: auto;">
+                ${listContent}
+            </div>
+        `;
+        modal.appendChild(expandedDiv);
     }
 };
