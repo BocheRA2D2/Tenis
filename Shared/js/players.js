@@ -19,8 +19,8 @@ const Players = {
             container.innerHTML = '<div style="padding:20px; text-align:center;">Brak graczy w bazie.</div>';
         }
 
-        players.forEach(p => {
-            // Find activity in current month
+        // Map players with their activity/debt status for sorting
+        const playersWithStatus = players.map(p => {
             let hasActivity = false;
             let hasDebt = false;
 
@@ -34,7 +34,7 @@ const Players = {
                 }
             });
 
-            // reservations - assuming res.who === p.id 
+            // reservations
             reservations.forEach(r => {
                 if (r.who === p.id) {
                     hasActivity = true;
@@ -42,6 +42,20 @@ const Players = {
                 }
             });
 
+            return { player: p, hasActivity, hasDebt };
+        });
+
+        // Sort: Debt first, then alphabetically
+        playersWithStatus.sort((a, b) => {
+            if (a.hasDebt !== b.hasDebt) {
+                return a.hasDebt ? -1 : 1; // Unpaid first
+            }
+            const nameA = `${a.player.name} ${a.player.surname}`.toLowerCase();
+            const nameB = `${b.player.name} ${b.player.surname}`.toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
+        playersWithStatus.forEach(({ player: p, hasActivity, hasDebt }) => {
             const item = document.createElement('div');
             item.className = 'list-item';
 

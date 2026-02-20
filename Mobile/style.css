@@ -14,6 +14,8 @@
     --radius-lg: 20px;
     --radius-md: 12px;
     --border-color: rgba(0, 0, 0, 0.05);
+    --bg-nav: #ffffff;
+    --text-nav: #94a3b8;
 }
 
 body.theme-dark {
@@ -30,38 +32,44 @@ body.theme-dark {
     --danger-bg: rgba(248, 113, 113, 0.15);
     --success-bg: rgba(74, 222, 128, 0.15);
     --border-color: rgba(255, 255, 255, 0.1);
+    --bg-nav: #1e293b;
+    --text-nav: #94a3b8;
 }
 
 body.theme-pingpong-light {
-    --bg-app: #e8f5e9;
+    --bg-app: #f0fdf4;
     --bg-surface: #ffffff;
-    --primary: #2e7d32;
-    --primary-glow: rgba(46, 125, 50, 0.4);
-    --secondary: #0277bd;
-    --dark: #1b5e20;
-    --text-main: #2e3d2e;
-    --text-muted: #667c66;
+    --primary: #10b981;
+    --primary-glow: rgba(16, 185, 129, 0.4);
+    --secondary: #3b82f6;
+    --dark: #064e3b;
+    --text-main: #065f46;
+    --text-muted: #34d399;
     --danger: #c62828;
     --success: #2e7d32;
     --danger-bg: rgba(198, 40, 40, 0.1);
     --success-bg: rgba(46, 125, 50, 0.1);
-    --border-color: rgba(46, 125, 50, 0.1);
+    --border-color: rgba(16, 185, 129, 0.1);
+    --bg-nav: #ffffff;
+    --text-nav: #64748b;
 }
 
 body.theme-pingpong-dark {
-    --bg-app: #0a1f0a;
-    --bg-surface: #142e14;
+    --bg-app: #062006;
+    --bg-surface: #0a2e0a;
     --primary: #4ade80;
     --primary-glow: rgba(74, 222, 128, 0.4);
-    --secondary: #00bcd4;
-    --dark: #e8f5e9;
-    --text-main: #d1e7d1;
-    --text-muted: #88a088;
+    --secondary: #fb923c;
+    --dark: #f0fdf4;
+    --text-main: #dcfce7;
+    --text-muted: #4ade80;
     --danger: #ff5252;
     --success: #4ade80;
     --danger-bg: rgba(255, 82, 82, 0.2);
     --success-bg: rgba(74, 222, 128, 0.2);
-    --border-color: rgba(74, 222, 128, 0.15);
+    --border-color: rgba(74, 222, 128, 0.1);
+    --bg-nav: #0a2e0a;
+    --text-nav: #4ade80;
 }
 
 * {
@@ -149,6 +157,22 @@ h3,
     font-weight: 600;
     color: var(--dark);
     margin: 0;
+}
+
+.tab-header-controls button {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--dark);
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
 .icon-btn {
@@ -295,11 +319,15 @@ h3,
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 0 16px 20px;
-    z-index: 50;
-    background: linear-gradient(to top, rgba(244, 246, 249, 1) 60%, rgba(244, 246, 249, 0) 100%);
-    pointer-events: none;
-    /* Let clicks pass through the gradient */
+    height: 85px;
+    background: var(--bg-nav);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
 }
 
 .nav-container {
@@ -316,15 +344,15 @@ h3,
 .nav-btn {
     background: none;
     border: none;
-    color: var(--text-muted);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 4px;
-    padding: 8px;
-    flex: 1;
-    border-radius: var(--radius-md);
+    color: var(--text-nav);
     transition: 0.3s;
+    width: 70px;
+    position: relative;
 }
 
 .nav-icon-box {

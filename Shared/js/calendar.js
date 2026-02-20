@@ -152,15 +152,19 @@ const Calendar = {
             </div>
 
             <div id="add-from-db-section" style="margin-bottom: 24px;">
-                <h4 style="margin-bottom:12px; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                    <ion-icon name="person-add-outline"></ion-icon> Dodaj zawodników:
-                </h4>
+                <button class="btn btn-outline btn-block mb-2" onclick="document.getElementById('db-player-list-container').classList.toggle('hidden')">
+                    <ion-icon name="person-add-outline"></ion-icon> Dodaj zawodników z bazy
+                </button>
                 
-                <div class="player-select-container">
-                    ${playerSelectionHtml || '<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.9rem;">Wszyscy gracze są już zapisani.</div>'}
+                <div id="db-player-list-container" class="hidden">
+                    <h4 style="margin-bottom:12px; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                        Wybierz z listy:
+                    </h4>
+                    <div class="player-select-container">
+                        ${playerSelectionHtml || '<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.9rem;">Wszyscy gracze są już zapisani.</div>'}
+                    </div>
+                    ${availablePlayers.length > 0 ? `<button class="btn btn-primary btn-block mb-3" onclick="Calendar.addPlayersFromDb('${training.id}')">Zapisz wybranych</button>` : ''}
                 </div>
-                
-                ${availablePlayers.length > 0 ? `<button class="btn btn-primary btn-block" onclick="Calendar.addPlayersFromDb('${training.id}')">Zapisz wybranych</button>` : ''}
             </div>
             
             <div id="edit-training-section" class="hidden" style="background: var(--bg-app); padding: 15px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-color);">
@@ -190,15 +194,15 @@ const Calendar = {
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <button class="btn btn-outline btn-block mb-3" onclick="document.getElementById('new-player-form').classList.toggle('hidden')">
-                    <ion-icon name="person-add-outline"></ion-icon> + Stwórz zupełnie nowego gracza
+                    <ion-icon name="person-add-outline"></ion-icon> + Stwórz nowego gracza
                 </button>
 
                 <div id="new-player-form" class="hidden">
                     <h4 style="margin-bottom:12px;">Nowy zawodnik do bazy:</h4>
                     <div class="form-group">
-                        <input type="text" id="new-name" placeholder="Imię" class="form-control mb-2"/>
-                        <input type="text" id="new-surname" placeholder="Nazwisko" class="form-control mb-2"/>
-                        <input type="tel" id="new-phone" placeholder="Telefon (opcj.)" class="form-control mb-2"/>
+                        <input type="text" id="new-name" placeholder="Imię (wymagane)" class="form-control mb-2"/>
+                        <input type="text" id="new-surname" placeholder="Nazwisko (opcjonalne)" class="form-control mb-2"/>
+                        <input type="tel" id="new-phone" placeholder="Telefon (opcjonalnie)" class="form-control mb-2"/>
                         <button class="btn btn-primary btn-block" onclick="Calendar.addNewPlayerAndAssign('${training.id}')">Dodaj i zapisz</button>
                     </div>
                 </div>
@@ -269,8 +273,8 @@ const Calendar = {
         const surname = document.getElementById('new-surname').value.trim();
         const phone = document.getElementById('new-phone').value.trim();
 
-        if (!name || !surname) {
-            alert('Imię i nazwisko są wymagane');
+        if (!name) {
+            alert('Imię jest wymagane');
             return;
         }
 
