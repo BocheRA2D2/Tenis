@@ -16,7 +16,7 @@ const Players = {
 
         container.innerHTML = '';
         if (players.length === 0) {
-            container.innerHTML = '<div style="padding:20px; text-align:center;">Brak zawodników w bazie.</div>';
+            container.innerHTML = '<div style="padding:20px; text-align:center;">Brak graczy w bazie.</div>';
         }
 
         players.forEach(p => {
@@ -255,13 +255,7 @@ const Players = {
             await DB.updateReservation(activityId, { paid: isPaid });
         }
 
-        // Re-render
-        // Small hack: hide and show modal by re-calculating everything
-        UI.hideModal();
-        Players.render(); // This will not auto-open the modal again. To do it better, 
-        // we'd re-trigger openDetails. 
-        // For now, let user click again or just accept it closes to refresh.
-        // Let's at least re-fetch and render nicely instead.
+        // Re-fetch data for the modal
         const year = state.currentDate.getFullYear();
         const month = state.currentDate.getMonth();
         const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
@@ -271,8 +265,12 @@ const Players = {
             DB.getTrainingsForMonth(yearMonthStr),
             DB.getReservations(yearMonthStr)
         ]);
+
         const p = players.find(x => x.id === playerId);
-        if (p) Players.openDetails(p, trainings, reservations);
+        if (p) {
+            // Re-open details with updated data (this replaces the current modal content)
+            Players.openDetails(p, trainings, reservations);
+        }
 
         // Background refresh list and red dots
         Players.render();

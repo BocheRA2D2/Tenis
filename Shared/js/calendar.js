@@ -133,44 +133,59 @@ const Calendar = {
 
         const html = `
             <div class="modal-header">
-                <h2>Szczegóły treningu</h2>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <h2>Szczegóły treningu</h2>
+                    <button class="icon-btn" style="width:32px; height:32px; font-size:1rem;" onclick="document.getElementById('edit-training-section').classList.toggle('hidden')">
+                        <ion-icon name="create-outline"></ion-icon>
+                    </button>
+                </div>
                 <button class="close-modal" onclick="UI.hideModal()"><ion-icon name="close"></ion-icon></button>
             </div>
-            <div style="margin-bottom: 16px;">
-                <strong>Data:</strong> ${UI.formatDate(training.date)} <br>
-                <strong>Godzina:</strong> ${training.time} 
-                ${training.canceled ? '<span class="text-danger">(Odwołany)</span>' : ''}
+
+            <div style="margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong>Data:</strong> ${UI.formatDate(training.date)} <br>
+                    <strong>Godzina:</strong> ${training.time} 
+                    ${training.canceled ? '<span class="text-danger">(Odwołany)</span>' : ''}
+                </div>
+                <div class="item-right" style="font-size:1.1rem;">
+                    <ion-icon name="people"></ion-icon> ${playersList.length}
+                </div>
             </div>
             
-            <div style="background: #f9f9f9; padding: 10px; border-radius: 6px; margin-bottom: 16px;">
-                <div class="form-group flex-between">
+            <div id="edit-training-section" class="hidden" style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
+                <div class="form-group">
                     <label>Zmień godzinę:</label>
-                    <input type="time" id="mod-time" value="${training.time}" class="form-control" style="width: auto;"/>
-                    <button class="btn btn-primary" onclick="Calendar.changeTime('${training.id}')">Zapisz</button>
+                    <div class="flex-between" style="gap:10px;">
+                        <input type="time" id="mod-time" value="${training.time}" class="form-control" style="margin-bottom:0; flex:1;"/>
+                        <button class="btn btn-primary" onclick="Calendar.changeTime('${training.id}')">Zapisz</button>
+                    </div>
                 </div>
-                <div class="form-group flex-between mt-2">
-                    <label>Przenieś na:</label>
-                    <input type="date" id="mod-date" class="form-control" style="width: auto;"/>
-                    <button class="btn btn-primary" onclick="Calendar.moveTraining('${training.id}', '${training.originalDate || training.id}')">Przenieś</button>
+                <div class="form-group mt-2">
+                    <label>Przenieś na inną datę:</label>
+                    <div class="flex-between" style="gap:10px;">
+                        <input type="date" id="mod-date" class="form-control" style="margin-bottom:0; flex:1;"/>
+                        <button class="btn btn-primary" onclick="Calendar.moveTraining('${training.id}', '${training.originalDate || training.id}')">Przenieś</button>
+                    </div>
                 </div>
-                <button class="btn btn-block ${training.canceled ? 'btn-success' : 'btn-danger'} mt-2" onclick="Calendar.toggleCancel('${training.id}', ${!training.canceled})">
+                <button class="btn btn-block ${training.canceled ? 'btn-success' : 'btn-danger'} mt-3" onclick="Calendar.toggleCancel('${training.id}', ${!training.canceled})">
                     ${training.canceled ? 'Przywróć trening' : 'Odwołaj trening'}
                 </button>
             </div>
 
             <h3 style="margin-bottom: 8px;">Zapisani gracze (${playersList.length})</h3>
-            <div style="margin-bottom: 16px; max-height: 150px; overflow-y:auto;">
+            <div style="margin-bottom: 16px; max-height: 200px; overflow-y:auto;">
                 ${playersHtml}
             </div>
 
             <div style="border-top: 1px solid #eee; padding-top: 16px;">
-                <h4>Dodaj z bazy:</h4>
+                <h4 style="margin-bottom:10px;">Dodaj z bazy:</h4>
                 <select id="multi-players" class="form-control mb-2" multiple>
                     ${selectOptions}
                 </select>
                 <button class="btn btn-primary btn-block mb-3" onclick="Calendar.addPlayersFromDb('${training.id}')">Dodaj wybranych</button>
                 
-                <h4>Dodaj nowego i zapisz:</h4>
+                <h4 style="margin-bottom:10px;">Dodaj nowego i zapisz:</h4>
                 <div class="form-group">
                     <input type="text" id="new-name" placeholder="Imię" class="form-control mb-2"/>
                     <input type="text" id="new-surname" placeholder="Nazwisko" class="form-control mb-2"/>
