@@ -98,7 +98,17 @@ const Players = {
         addBtn.onclick = () => Players.openAddForm();
     },
 
-    openDetails(player, trainings, reservations) {
+    async openDetails(player, overrideDate = null) {
+        const date = overrideDate || state.currentDate;
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+
+        const [trainings, reservations] = await Promise.all([
+            DB.getTrainingsForMonth(yearMonthStr),
+            DB.getReservations(yearMonthStr)
+        ]);
+
         // Calculate history & stats
         let trainingCount = 0;
         let tableHours = 0;
@@ -154,7 +164,7 @@ const Players = {
                             <div class="text-muted" style="font-size:0.85rem;">${label} - ${cost}</div>
                         </div>
                         <button class="btn btn-sm ${h.paid ? 'btn-success' : 'btn-danger'}" 
-                            onclick="Players.toggleHistoryPaid('${h.type}', '${h.id}', '${player.id}', ${!h.paid})">
+                            onclick="Players.toggleHistoryPaid('${h.type}', '${h.id}', '${player.id}', ${!h.paid}, new Date(${date.getTime()}))">
                             ${h.paid ? 'Zapłacone' : 'Do zapłaty'}
                         </button>
                     </div>
@@ -191,10 +201,14 @@ const Players = {
             </div>
 
             <div class="list-expand-header">
-                <h3 style="margin-bottom: 0;">Historia wpłat (obecny miesiąc)</h3>
-                <button class="expand-btn" onclick="Players.toggleExpandList('history-list-box', 'Historia wpłat')">
-                    <ion-icon name="expand-outline"></ion-icon>
-                </button>
+                <h3 style="margin-bottom: 0;">Historia wpłat (${UI.getMonthName(month)} ${year})</h3>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn btn-sm btn-outline" onclick="Players.changeMonth('${player.id}', new Date(${date.getTime()}), -1)"><ion-icon name="chevron-back"></ion-icon></button>
+                    <button class="btn btn-sm btn-outline" onclick="Players.changeMonth('${player.id}', new Date(${date.getTime()}), 1)"><ion-icon name="chevron-forward"></ion-icon></button>
+                    <button class="expand-btn" onclick="Players.toggleExpandList('history-list-box', 'Historia wpłat', 'Players.openDetails', ['${player.id}', new Date(${date.getTime()})])">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </button>
+                </div>
             </div>
             <div id="history-list-box" style="max-height: 200px; overflow-y:auto; padding-right:5px;">
                 ${historyHtml}
@@ -202,6 +216,19 @@ const Players = {
         `;
 
         UI.showModal(html);
+
+        // Re-render expanded view if it was active
+        if (state.activeExpandedView && state.activeExpandedView.containerId === 'history-list-box') {
+            Players.renderExpanded(state.activeExpandedView);
+        }
+    },
+
+    async changeMonth(playerId, currentDate, delta) {
+        currentDate.setMonth(currentDate.getMonth() + delta);
+        const player = (await DB.getPlayers()).find(p => p.id === playerId);
+        if (player) {
+            Players.openDetails(player, currentDate);
+        }
     },
 
     openAddForm() {
@@ -274,7 +301,7 @@ const Players = {
         }
     },
 
-    async toggleHistoryPaid(type, activityId, playerId, isPaid) {
+    async toggleHistoryPaid(type, activityId, playerId, isPaid, overrideDate = null) {
         if (type === 'training') {
             const t = await DB.getTraining(activityId);
             if (t) {
@@ -285,21 +312,10 @@ const Players = {
             await DB.updateReservation(activityId, { paid: isPaid });
         }
 
-        // Re-fetch data for the modal
-        const year = state.currentDate.getFullYear();
-        const month = state.currentDate.getMonth();
-        const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-
-        const [players, trainings, reservations] = await Promise.all([
-            DB.getPlayers(),
-            DB.getTrainingsForMonth(yearMonthStr),
-            DB.getReservations(yearMonthStr)
-        ]);
-
-        const p = players.find(x => x.id === playerId);
-        if (p) {
-            // Re-open details with updated data (this replaces the current modal content)
-            Players.openDetails(p, trainings, reservations);
+        const date = overrideDate || state.currentDate;
+        const player = (await DB.getPlayers()).find(x => x.id === playerId);
+        if (player) {
+            Players.openDetails(player, date);
         }
 
         // Background refresh list and red dots
@@ -307,22 +323,32 @@ const Players = {
         checkUnpaidDebts();
     },
 
-    toggleExpandList(containerId, title) {
-        const modal = document.getElementById('modal-container');
-        const listContent = document.getElementById(containerId).innerHTML;
+    toggleExpandList(containerId, title, contentFn, params) {
+        state.activeExpandedView = { containerId, title, contentFn, params };
+        this.renderExpanded(state.activeExpandedView);
+    },
 
-        const expandedDiv = document.createElement('div');
-        expandedDiv.className = 'expanded-container';
+    renderExpanded(view) {
+        const modal = document.getElementById('modal-container');
+        const listContent = document.getElementById(view.containerId).innerHTML;
+
+        // Check if expanded-container already exists
+        let expandedDiv = modal.querySelector('.expanded-container');
+        if (!expandedDiv) {
+            expandedDiv = document.createElement('div');
+            expandedDiv.className = 'expanded-container';
+            modal.appendChild(expandedDiv);
+        }
+
         expandedDiv.innerHTML = `
-            <button class="btn btn-outline expanded-back-btn" onclick="this.parentElement.remove()">
+            <button class="btn btn-outline expanded-back-btn" onclick="state.activeExpandedView = null; this.parentElement.remove()">
                 <ion-icon name="arrow-back-outline"></ion-icon> Powrót
             </button>
-            <h3><ion-icon name="wallet-outline"></ion-icon> ${title}</h3>
+            <h3><ion-icon name="wallet-outline"></ion-icon> ${view.title}</h3>
             <div style="flex: 1; overflow-y: auto;">
                 ${listContent}
             </div>
         `;
-        modal.appendChild(expandedDiv);
     },
 
     handleSearch(query) {

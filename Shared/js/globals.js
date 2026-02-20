@@ -1,6 +1,7 @@
 const state = {
     currentDate: new Date(),
     today: new Date(),
+    activeExpandedView: null, // Track { containerId, title, contentFn, params }
 };
 
 const UI = {

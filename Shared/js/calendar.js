@@ -152,9 +152,14 @@ const Calendar = {
             </div>
 
             <div id="add-from-db-section" style="margin-bottom: 24px;">
-                <button class="btn btn-outline btn-block mb-2" onclick="document.getElementById('db-player-list-container').classList.toggle('hidden')">
-                    <ion-icon name="person-add-outline"></ion-icon> Dodaj zawodników z bazy
-                </button>
+                <div class="list-expand-header">
+                    <button class="btn btn-outline mb-2" style="flex:1;" onclick="document.getElementById('db-player-list-container').classList.toggle('hidden')">
+                        <ion-icon name="person-add-outline"></ion-icon> Dodaj zawodników z bazy
+                    </button>
+                    <button class="expand-btn" onclick="Calendar.toggleExpandList('db-player-list-container', 'Dodaj zawodników', 'Calendar.openDetails', ['${training.id}'])">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </button>
+                </div>
                 
                 <div id="db-player-list-container" class="hidden">
                     <h4 style="margin-bottom:12px; font-size:1rem; display:flex; align-items:center; gap:8px;">
@@ -189,7 +194,7 @@ const Calendar = {
 
             <div class="list-expand-header">
                 <h3 style="margin-bottom: 0;">Obecnie zapisani (${playersList.length})</h3>
-                <button class="expand-btn" onclick="Calendar.toggleExpandList('enrolled-list-box', 'Obecnie zapisani')">
+                <button class="expand-btn" onclick="Calendar.toggleExpandList('enrolled-list-box', 'Obecnie zapisani', 'Calendar.openDetails', ['${training.id}'])">
                     <ion-icon name="expand-outline"></ion-icon>
                 </button>
             </div>
@@ -215,6 +220,12 @@ const Calendar = {
         `;
 
         UI.showModal(html);
+
+        // Re-render expanded view if it was active
+        if (state.activeExpandedView && (state.activeExpandedView.containerId === 'enrolled-list-box' || state.activeExpandedView.containerId === 'db-player-list-container')) {
+            Calendar.renderExpanded(state.activeExpandedView);
+        }
+
         Calendar.currentTraining = training;
     },
 
@@ -263,7 +274,8 @@ const Calendar = {
     },
 
     addPlayersFromDb(trainingId) {
-        const checkboxes = document.querySelectorAll('.player-select-container input[type="checkbox"]:checked');
+        // Find checkboxes in either the base modal or the expanded view
+        const checkboxes = document.querySelectorAll('#db-player-list-container input[type="checkbox"]:checked');
         const selectedIds = Array.from(checkboxes).map(cb => cb.value);
         if (selectedIds.length === 0) return;
 
@@ -291,21 +303,46 @@ const Calendar = {
         this.saveTrainingUpdate(trainingId, { players: currentPlayers });
     },
 
-    toggleExpandList(containerId, title) {
-        const modal = document.getElementById('modal-container');
-        const listContent = document.getElementById(containerId).innerHTML;
+    toggleExpandList(containerId, title, contentFn, params) {
+        state.activeExpandedView = { containerId, title, contentFn, params };
+        this.renderExpanded(state.activeExpandedView);
+    },
 
-        const expandedDiv = document.createElement('div');
-        expandedDiv.className = 'expanded-container';
+    renderExpanded(view) {
+        const modal = document.getElementById('modal-container');
+        const container = document.getElementById(view.containerId);
+        if (!container) return; // Should not happen
+
+        const listContent = container.innerHTML;
+
+        // Check if expanded-container already exists
+        let expandedDiv = modal.querySelector('.expanded-container');
+        if (!expandedDiv) {
+            expandedDiv = document.createElement('div');
+            expandedDiv.className = 'expanded-container';
+            modal.appendChild(expandedDiv);
+        }
+
         expandedDiv.innerHTML = `
-            <button class="btn btn-outline expanded-back-btn" onclick="this.parentElement.remove()">
+            <button class="btn btn-outline expanded-back-btn" onclick="state.activeExpandedView = null; this.parentElement.remove()">
                 <ion-icon name="arrow-back-outline"></ion-icon> Powrót
             </button>
-            <h3><ion-icon name="list-outline"></ion-icon> ${title}</h3>
+            <h3><ion-icon name="list-outline"></ion-icon> ${view.title}</h3>
             <div style="flex: 1; overflow-y: auto;">
                 ${listContent}
             </div>
         `;
-        modal.appendChild(expandedDiv);
+
+        // If it's the player selection list, we need to re-bind click events for the expanded view items
+        if (view.containerId === 'db-player-list-container') {
+            const items = expandedDiv.querySelectorAll('.player-select-item');
+            items.forEach(item => {
+                item.onclick = (e) => {
+                    const cb = item.querySelector('input');
+                    cb.checked = !cb.checked;
+                    e.stopPropagation();
+                };
+            });
+        }
     }
 };
