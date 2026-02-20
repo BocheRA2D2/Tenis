@@ -7,19 +7,15 @@ const Calendar = {
         const month = state.currentDate.getMonth();
         const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
 
-        // Get DB overrides
         const dbTrainings = await DB.getTrainingsForMonth(yearMonthStr);
         let trainings = [];
 
-        // Generate Mon/Weds
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let i = 1; i <= daysInMonth; i++) {
             const date = new Date(year, month, i);
-            const dayOfWeek = date.getDay(); // 0 is Sun, 1 is Mon, 3 is Wed
+            const dayOfWeek = date.getDay();
             if (dayOfWeek === 1 || dayOfWeek === 3) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-
-                // Find if db override exists
                 const override = dbTrainings.find(t => t.id === dateStr || t.originalDate === dateStr);
 
                 if (override) {
@@ -38,16 +34,6 @@ const Calendar = {
             }
         }
 
-        // Add dynamically created trainings outside Mon/Wed that might exist in DB
-        dbTrainings.forEach(dbt => {
-            if (!trainings.find(t => t.id === dbt.id) && !dbt.originalDate) {
-                // E.g. purely custom training added manually if ever supported, 
-                // but currently we only allow moving existing default ones.
-            }
-        });
-
-        // Filter and remap moved trainings to their new dates, but ONLY if they moved WITHIN this month.
-        // If moved to next month, it should show in that month's view (will be matched by originalDate search or DB query by 'month').
         trainings = trainings.map(t => {
             if (t.movedTo) {
                 return { ...t, date: t.movedTo };
@@ -55,7 +41,6 @@ const Calendar = {
             return t;
         });
 
-        // Sort chronologically
         trainings.sort((a, b) => a.date.localeCompare(b.date));
 
         container.innerHTML = '';
@@ -68,7 +53,6 @@ const Calendar = {
             const item = document.createElement('div');
             item.className = 'list-item';
 
-            // Past vs Future logic
             const trainingDate = new Date(t.date);
             trainingDate.setHours(0, 0, 0, 0);
             const todayDate = new Date();
@@ -78,7 +62,6 @@ const Calendar = {
                 item.classList.add('is-past');
             }
 
-            // Unpaid logic
             const hasUnpaid = (t.players || []).some(p => !p.paid);
             if (hasUnpaid) item.classList.add('has-alert');
 
@@ -108,7 +91,6 @@ const Calendar = {
     },
 
     async openDetails(training) {
-        // Fetch all players for multi-select
         const allPlayers = await DB.getPlayers();
         const playersList = training.players || [];
 
@@ -116,7 +98,7 @@ const Calendar = {
             const pData = allPlayers.find(ap => ap.id === p.id);
             const name = pData ? `${pData.name} ${pData.surname}` : 'Nieznany gracz';
             return `
-                <div class="flex-between mb-2" style="border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                <div class="flex-between mb-2" style="border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
                     <div>
                         <button class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.8rem" onclick="Calendar.removePlayer('${training.id}', '${p.id}')">
                             <ion-icon name="trash"></ion-icon>
@@ -124,7 +106,7 @@ const Calendar = {
                         <span style="margin-left:8px;">${name}</span>
                     </div>
                     <div>
-                        <button class="btn ${p.paid ? 'btn-success' : 'btn-danger'}" onclick="Calendar.togglePaid('${training.id}', '${p.id}', ${!p.paid})">
+                        <button class="btn ${p.paid ? 'btn-success' : 'btn-danger'} btn-sm" onclick="Calendar.togglePaid('${training.id}', '${p.id}', ${!p.paid})">
                             ${p.paid ? 'Zapłacone' : 'Do zapłaty'}
                         </button>
                     </div>
@@ -133,11 +115,19 @@ const Calendar = {
         }).join('');
 
         if (playersList.length === 0) {
-            playersHtml = '<p class="text-muted">Brak zapisanych graczy</p>';
+            playersHtml = '<p class="text-muted" style="text-align:center; padding:10px;">Brak zapisanych graczy</p>';
         }
 
         const availablePlayers = allPlayers.filter(ap => !playersList.find(p => p.id === ap.id));
-        const selectOptions = availablePlayers.map(ap => `<option value="${ap.id}">${ap.name} ${ap.surname}</option>`).join('');
+
+        const playerSelectionHtml = availablePlayers.map(ap => `
+            <div class="player-select-item" onclick="const cb = this.querySelector('input'); cb.checked = !cb.checked; event.stopPropagation();">
+                <input type="checkbox" value="${ap.id}" onclick="event.stopPropagation();">
+                <div class="player-select-info">
+                    <span class="player-select-name">${ap.name} ${ap.surname}</span>
+                </div>
+            </div>
+        `).join('');
 
         const html = `
             <div class="modal-header">
@@ -150,7 +140,7 @@ const Calendar = {
                 <button class="close-modal" onclick="UI.hideModal()"><ion-icon name="close"></ion-icon></button>
             </div>
 
-            <div style="margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <strong>Data:</strong> ${UI.formatDate(training.date)} <br>
                     <strong>Godzina:</strong> ${training.time} 
@@ -160,8 +150,20 @@ const Calendar = {
                     <ion-icon name="people"></ion-icon> ${playersList.length}
                 </div>
             </div>
+
+            <div id="add-from-db-section" style="margin-bottom: 24px;">
+                <h4 style="margin-bottom:12px; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                    <ion-icon name="person-add-outline"></ion-icon> Dodaj zawodników:
+                </h4>
+                
+                <div class="player-select-container">
+                    ${playerSelectionHtml || '<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.9rem;">Wszyscy gracze są już zapisani.</div>'}
+                </div>
+                
+                ${availablePlayers.length > 0 ? `<button class="btn btn-primary btn-block" onclick="Calendar.addPlayersFromDb('${training.id}')">Zapisz wybranych</button>` : ''}
+            </div>
             
-            <div id="edit-training-section" class="hidden" style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
+            <div id="edit-training-section" class="hidden" style="background: var(--bg-app); padding: 15px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-color);">
                 <div class="form-group">
                     <label>Zmień godzinę:</label>
                     <div class="flex-between" style="gap:10px;">
@@ -181,29 +183,23 @@ const Calendar = {
                 </button>
             </div>
 
-            <h3 style="margin-bottom: 8px;">Zapisani gracze (${playersList.length})</h3>
-            <div style="margin-bottom: 16px; max-height: 200px; overflow-y:auto;">
+            <h3 style="margin-bottom: 8px;">Obecnie zapisani (${playersList.length})</h3>
+            <div style="margin-bottom: 24px; max-height: 180px; overflow-y:auto; border:1px solid var(--border-color); border-radius:12px; padding:4px;">
                 ${playersHtml}
             </div>
 
-            <div style="border-top: 1px solid #eee; padding-top: 16px;">
-                <h4 style="margin-bottom:10px;">Dodaj z bazy:</h4>
-                <select id="multi-players" class="form-control mb-2" multiple>
-                    ${selectOptions}
-                </select>
-                <button class="btn btn-primary btn-block mb-3" onclick="Calendar.addPlayersFromDb('${training.id}')">Dodaj wybranych</button>
-                
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <button class="btn btn-outline btn-block mb-3" onclick="document.getElementById('new-player-form').classList.toggle('hidden')">
-                    <ion-icon name="person-add-outline"></ion-icon> Dodaj nowego gracza
+                    <ion-icon name="person-add-outline"></ion-icon> + Stwórz zupełnie nowego gracza
                 </button>
 
                 <div id="new-player-form" class="hidden">
-                    <h4 style="margin-bottom:10px;">Dodaj nowego i zapisz:</h4>
+                    <h4 style="margin-bottom:12px;">Nowy zawodnik do bazy:</h4>
                     <div class="form-group">
                         <input type="text" id="new-name" placeholder="Imię" class="form-control mb-2"/>
                         <input type="text" id="new-surname" placeholder="Nazwisko" class="form-control mb-2"/>
                         <input type="tel" id="new-phone" placeholder="Telefon (opcj.)" class="form-control mb-2"/>
-                        <button class="btn btn-primary btn-block" onclick="Calendar.addNewPlayerAndAssign('${training.id}')">Dodaj do bazy i treningu</button>
+                        <button class="btn btn-primary btn-block" onclick="Calendar.addNewPlayerAndAssign('${training.id}')">Dodaj i zapisz</button>
                     </div>
                 </div>
             </div>
@@ -216,12 +212,10 @@ const Calendar = {
     async saveTrainingUpdate(id, updates) {
         let training = await DB.getTraining(id);
         if (!training) {
-            // It's a default one that hasn't been saved to DB yet
             training = Calendar.currentTraining;
         }
         await DB.setTraining(id, { ...training, ...updates });
 
-        // Re-fetch and re-render current details
         const updated = await DB.getTraining(id);
         if (updated) {
             Calendar.openDetails(updated);
@@ -260,8 +254,8 @@ const Calendar = {
     },
 
     addPlayersFromDb(trainingId) {
-        const select = document.getElementById('multi-players');
-        const selectedIds = Array.from(select.selectedOptions).map(opt => opt.value);
+        const checkboxes = document.querySelectorAll('.player-select-container input[type="checkbox"]:checked');
+        const selectedIds = Array.from(checkboxes).map(cb => cb.value);
         if (selectedIds.length === 0) return;
 
         const currentPlayers = Calendar.currentTraining.players || [];

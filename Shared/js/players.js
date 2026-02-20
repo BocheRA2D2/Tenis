@@ -123,7 +123,7 @@ const Players = {
                 const label = h.type === 'training' ? `Trening (${h.time})` : `Wynajęcie stołu (${h.duration}h, ${h.time})`;
                 const cost = h.type === 'training' ? '35 zł' : `${20 * h.duration} zł`;
                 return `
-                    <div class="flex-between mb-2 pb-2" style="border-bottom: 1px solid #eee;">
+                    <div class="flex-between mb-2 pb-2" style="border-bottom: 1px solid var(--border-color);">
                         <div>
                             <strong>${UI.formatDate(h.date)}</strong>
                             <div class="text-muted" style="font-size:0.85rem;">${label} - ${cost}</div>
@@ -152,14 +152,14 @@ const Players = {
                 <button class="btn btn-danger" onclick="Players.deletePlayer('${player.id}')"><ion-icon name="trash"></ion-icon></button>
             </div>
 
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="background: var(--bg-app); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
                 <div class="flex-between mb-2">
                     <span>Ilość zajęć (treningów):</span> <strong>${trainingCount}</strong>
                 </div>
                 <div class="flex-between mb-2">
                     <span>Godziny wynajęcia stołu:</span> <strong>${tableHours} h</strong>
                 </div>
-                <div class="flex-between" style="border-top:1px solid #ddd; padding-top:8px; margin-top:8px;">
+                <div class="flex-between" style="border-top:1px solid var(--border-color); padding-top:8px; margin-top:8px;">
                     <span>Pozostała kwota do zapłaty:</span> 
                     <strong class="text-danger" style="font-size:1.1rem;">${debtAmount} zł</strong>
                 </div>

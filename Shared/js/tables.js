@@ -171,9 +171,9 @@ const Tables = {
                     ${options}
                 </select>
                 
-                <div class="flex-between" style="background:#f0f0f0; padding:10px; border-radius:6px; margin-bottom:15px;">
+                <div class="flex-between" style="background:var(--bg-app); padding:15px; border-radius:12px; margin-bottom:15px; border: 1px solid var(--border-color);">
                     <strong>Do zapłaty: ${cost} zł</strong>
-                    <button class="btn ${r.paid ? 'btn-success' : 'btn-danger'}" onclick="Tables.togglePaid('${r.id}', ${!r.paid})">
+                    <button class="btn ${r.paid ? 'btn-success' : 'btn-danger'} btn-sm" onclick="Tables.togglePaid('${r.id}', ${!r.paid})">
                         ${r.paid ? 'Zapłacone' : 'Do zapłaty'}
                     </button>
                 </div>
