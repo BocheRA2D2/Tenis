@@ -1,4 +1,6 @@
 const Players = {
+    searchQuery: '',
+
     async render() {
         const container = document.getElementById('players-list');
         container.innerHTML = '<div style="padding:20px; text-align:center;">Ładowanie...</div>';
@@ -8,11 +10,20 @@ const Players = {
         const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
 
         // Get players, trainings, reservations for this month
-        const [players, trainings, reservations] = await Promise.all([
+        let [players, trainings, reservations] = await Promise.all([
             DB.getPlayers(),
             DB.getTrainingsForMonth(yearMonthStr),
             DB.getReservations(yearMonthStr)
         ]);
+
+        if (this.searchQuery) {
+            const q = this.searchQuery.toLowerCase();
+            players = players.filter(p =>
+                p.name.toLowerCase().includes(q) ||
+                (p.surname && p.surname.toLowerCase().includes(q)) ||
+                (p.phone && p.phone.includes(q))
+            );
+        }
 
         container.innerHTML = '';
         if (players.length === 0) {
@@ -312,5 +323,10 @@ const Players = {
             </div>
         `;
         modal.appendChild(expandedDiv);
+    },
+
+    handleSearch(query) {
+        this.searchQuery = query;
+        this.render();
     }
 };

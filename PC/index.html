@@ -76,7 +76,7 @@
 
                 <!-- Tab: Zawodnicy -->
                 <section id="tab-players" class="tab-content">
-                    <div class="section-header flex-between">
+                    <div class="section-header flex-between" style="margin-bottom: 20px;">
                         <div>
                             <h3>Baza zawodników</h3>
                             <p class="text-subtitle">Zarządzaj graczami i ich płatnościami</p>
@@ -85,6 +85,13 @@
                             <ion-icon name="add-circle-outline"></ion-icon> Dodaj zawodnika
                         </button>
                     </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <input type="text" placeholder="Szukaj zawodnika po imieniu, nazwisku lub telefonie..."
+                            class="form-control" style="max-width: 450px; margin-bottom:0;"
+                            oninput="Players.handleSearch(this.value)" />
+                    </div>
+
                     <div id="players-list" class="grid-list"></div>
                 </section>
 
