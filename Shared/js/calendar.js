@@ -68,6 +68,16 @@ const Calendar = {
             const item = document.createElement('div');
             item.className = 'list-item';
 
+            // Past vs Future logic
+            const trainingDate = new Date(t.date);
+            trainingDate.setHours(0, 0, 0, 0);
+            const todayDate = new Date();
+            todayDate.setHours(0, 0, 0, 0);
+
+            if (trainingDate < todayDate) {
+                item.classList.add('is-past');
+            }
+
             // Unpaid logic
             const hasUnpaid = (t.players || []).some(p => !p.paid);
             if (hasUnpaid) item.classList.add('has-alert');
@@ -79,15 +89,13 @@ const Calendar = {
             if (t.canceled) {
                 statusHtml = '<span class="text-danger" style="font-size: 0.8rem; margin-left: 8px;">(Odwołany)</span>';
             } else if (t.movedTo) {
-                // If it was moved, show original date
-                const origObj = new Date(t.originalDate);
-                statusHtml = `<span class="text-muted" style="font-size: 0.8rem; margin-left: 8px;">(Przełożono z ${UI.formatDate(t.originalDate)})</span>`;
+                statusHtml = `<span class="badge badge-orange" style="margin-left: 8px;">Przełożono z ${UI.formatDate(t.originalDate)}</span>`;
             }
 
             item.innerHTML = `
                 <div>
-                    <div class="item-title">${dayName}, ${UI.formatDate(t.date)} ${statusHtml}</div>
-                    <div class="item-subtitle">Godzina: ${t.time}</div>
+                    <div class="item-title">${dayName}, ${UI.formatDate(t.date)}</div>
+                    <div class="item-subtitle">Godzina: ${t.time} ${statusHtml}</div>
                 </div>
                 <div class="item-right">
                     <ion-icon name="people"></ion-icon> ${(t.players || []).length}
