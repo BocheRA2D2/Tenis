@@ -38,9 +38,9 @@
                     <ion-icon name="people-outline"></ion-icon>
                     <span>Zawodnicy</span>
                 </button>
-                <button class="nav-btn" data-tab="tab-tables">
-                    <ion-icon name="desktop-outline"></ion-icon>
-                    <span>Stoły</span>
+                <button class="nav-btn" data-tab="tab-settings">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    <span>Ustawienia</span>
                 </button>
             </nav>
 
@@ -101,6 +101,17 @@
                     </div>
                     <div id="tables-list" class="grid-list"></div>
                 </section>
+
+                <!-- Tab: Ustawienia -->
+                <section id="tab-settings" class="tab-content">
+                    <div class="section-header">
+                        <h3>Ustawienia aplikacji</h3>
+                        <p class="text-subtitle">Dostosuj wygląd i preferencje</p>
+                    </div>
+                    <div id="settings-content" class="grid-list">
+                        <!-- Settings injection -->
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -113,13 +124,14 @@
     </div>
 
     <!-- Scripts from Shared Folder -->
-    <script src="../Shared/js/firebase-init.js"></script>
-    <script src="../Shared/js/globals.js"></script>
-    <script src="../Shared/js/db.js"></script>
-    <script src="../Shared/js/app.js"></script>
-    <script src="../Shared/js/calendar.js"></script>
-    <script src="../Shared/js/players.js"></script>
-    <script src="../Shared/js/tables.js"></script>
+    <script src="Shared/js/firebase-init.js"></script>
+    <script src="Shared/js/globals.js"></script>
+    <script src="Shared/js/db.js"></script>
+    <script src="Shared/js/app.js"></script>
+    <script src="Shared/js/calendar.js"></script>
+    <script src="Shared/js/players.js"></script>
+    <script src="Shared/js/tables.js"></script>
+    <script src="Shared/js/settings.js"></script>
 </body>
 
 </html>
